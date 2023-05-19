@@ -3,27 +3,21 @@ const app = express();
 const translateRoute = require("./routes/translates");
 const connectDB = require("./db/connect");
 require("dotenv").config();
+const cors = require("cors");
+
 app.use(express.json());
 const port = 5000;
 
-// CORSを許可する設定
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH"
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+// CORSミドルウェアの使用
+app.use(cors());
 
-//ルーティング設計
-app.use("/api/v1/translates",translateRoute);
+// ルーティング設計
+app.use("/api/v1/translates", translateRoute);
 
-//データベースと接続
+// データベースと接続
 const start = async () => {
   try {
-  await connectDB(process.env.DB_URI);
+    await connectDB(process.env.DB_URI);
     app.listen(port, () => {
       console.log(`サーバー起動 port ${port}`);
     });
